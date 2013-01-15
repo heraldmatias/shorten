@@ -6,8 +6,7 @@ from os.path import dirname, join, realpath, split
 SYSTEM_PATH, PROJECT_DIR = split(realpath(dirname(__file__)))
 
 ADMINS = (
-    ('Herald Olivares', 'heraldmatias.oz@gmail.com'),
-    ('CARLOS Huamani', 'carlos.hs.92@gmail.com'),
+    ('Herald Olivares', 'heraldmatias.oz@gmail.com'),    
 )
 
 FCGI_OPTIONS = {
@@ -27,12 +26,8 @@ DATABASES = {
     }
 }
 ADMIN_SEND_MAIL = False
-#DEFAULT_FROM_EMAIL = 'portalineiperu@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'portalineiperu@gmail.com'
-EMAIL_HOST_PASSWORD = 'inei.2012'
-EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'prensa@presidencia.gob.pe'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

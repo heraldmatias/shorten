@@ -15,8 +15,8 @@
 <div class="tab-content" id="contenido_izq">
 <div id="nuevo" class="tab-pane fade in active">
 <form enctype="multipart/form-data" class="form-inline" id="frmdoc" name="frmdoc" method="post" 
-{% if doc %}
-action="{% url shorten-mantenimiento-doc-edit doc.codigo %}" {% else %}
+{% if reporte %}
+action="{% url shorten-mantenimiento-doc-edit reporte.codigo %}" {% else %}
 action="{% url shorten-mantenimiento-doc-add %}" {% endif %}> 
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
