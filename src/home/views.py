@@ -11,7 +11,7 @@ from home.models import Reporte
 from urllib2 import urlopen
 from django.contrib import messages
 from django_tables2.config import RequestConfig
-
+from django.core.files.storage import  FileSystemStorage,default_storage
 def internal_error_view(request):
     return render_to_response('500.html',{},context_instance=RequestContext(request))
 
