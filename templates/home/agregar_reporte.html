@@ -8,7 +8,7 @@
 {% endfor %}
 {% endif %}
 <ul class="nav nav-tabs">{% if reporte %}
-<li class="active"><a href="{% url shorten-mantenimiento-doc-edit doc.codigo %}">Modificar</a></li>{% else %}
+<li class="active"><a href="{% url shorten-mantenimiento-doc-edit reporte.codigo %}">Modificar</a></li>{% else %}
 <li class="active"><a href="{% url shorten-mantenimiento-doc-add %}">Nuevo</a></li>{% endif %}
 <li><a href="{% url shorten-mantenimiento-doc-query %}" >Consultar</a></li>
 </ul>
