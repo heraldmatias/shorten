@@ -8,7 +8,7 @@
 {% endfor %}
 {% endif %}
 <ul class="nav nav-tabs">{% if reporte %}
-<li class="active"><a href="{% url shorten-mantenimiento-doc-edit reporte.codigo %}">Modificar</a></li>{% else %}
+<li class="active"><a href="{% url shorten-mantenimiento-doc-edit reporte.pk %}">Modificar</a></li>{% else %}
 <li class="active"><a href="{% url shorten-mantenimiento-doc-add %}">Nuevo</a></li>{% endif %}
 <li><a href="{% url shorten-mantenimiento-doc-query %}" >Consultar</a></li>
 </ul>
@@ -16,7 +16,7 @@
 <div id="nuevo" class="tab-pane fade in active">
 <form enctype="multipart/form-data" class="form-inline" id="frmdoc" name="frmdoc" method="post" 
 {% if reporte %}
-action="{% url shorten-mantenimiento-doc-edit reporte.codigo %}" {% else %}
+action="{% url shorten-mantenimiento-doc-edit reporte.pk %}" {% else %}
 action="{% url shorten-mantenimiento-doc-add %}" {% endif %}> 
 <div id="frmprovincia" class="modal" style="position: relative; top: auto; left: auto; margin: 0 auto auto 20px; z-index: 1;width:720px;height:auto"><!--class="modal hide fade">-->
     <div class="modal-header">
@@ -38,10 +38,10 @@ action="{% url shorten-mantenimiento-doc-add %}" {% endif %}>
         {{ formulario.fec_creac.errors }}
       <div class="span3"><label>Fecha del Documento:</label></div> <div class="span6"><label class="input-append date" style="display:inline" id="dp1" data-date-format="dd/mm/yyyy" > {{ formulario.fec_creac }}<span class="add-on"><i class="icon-th"></i></span></label> </div> </div>
       <br>
-      {% if reporte.short_url %}
+      {% if short_url %}
       <div class="row-fluid">
       <div class="span3">URL DEL DOCUMENTO:</div><div class="span3">
-      <a href="{{ reporte.short_url }}" target="_blank" style="font-size:14px;">{{reporte.short_url}}</a></div></div>
+      <a href="{{ short_url }}" target="_blank" style="font-size:14px;">{{short_url}}</a></div></div>
       {% endif %}
     </div>
     <div class="modal-footer">

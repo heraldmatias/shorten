@@ -67,6 +67,7 @@ def singout(request):
 @login_required()
 def documentos_add(request, codigo=None):
     obj=None
+    short_url = None
     if codigo:
         obj= get_object_or_404(Reporte,pk=codigo)        
     if request.method == 'POST':
@@ -92,11 +93,14 @@ def documentos_add(request, codigo=None):
             messages.add_message(request, messages.SUCCESS, 'Reporte grabado exitosamente!!!')
             #print "AQUI"
             #return redirect('shorten-mantenimiento-doc-query')
+            short_url = obj.short_url
+            obj = None
             formulario = ReporteForm()
     else:        
         formulario = ReporteForm(instance=obj)
     return render_to_response('home/agregar_reporte.html', {
         'reporte':obj,
+        'short_url' : short_url,
         'formulario': formulario,},context_instance=RequestContext(request),)
 
 @login_required()
