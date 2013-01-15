@@ -7,7 +7,7 @@
 <h4><div class="alert alert-{{ message.tags }}"><a class="close" data-dismiss="alert">×</a><strong>Exito!!!</strong> <p>{{ message }}</p></div></h4>
 {% endfor %}
 {% endif %}
-<ul class="nav nav-tabs">{% if doc %}
+<ul class="nav nav-tabs">{% if reporte %}
 <li class="active"><a href="{% url shorten-mantenimiento-doc-edit doc.codigo %}">Modificar</a></li>{% else %}
 <li class="active"><a href="{% url shorten-mantenimiento-doc-add %}">Nuevo</a></li>{% endif %}
 <li><a href="{% url shorten-mantenimiento-doc-query %}" >Consultar</a></li>
