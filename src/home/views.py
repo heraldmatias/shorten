@@ -94,8 +94,8 @@ def documentos_add(request, codigo=None):
             #print "AQUI"
             #return redirect('shorten-mantenimiento-doc-query')
             short_url = obj.short_url
-            obj = None
-            formulario = ReporteForm()
+        obj = None
+        formulario = ReporteForm()
     else:        
         formulario = ReporteForm(instance=obj)
     return render_to_response('home/agregar_reporte.html', {
