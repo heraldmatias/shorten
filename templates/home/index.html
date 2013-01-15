@@ -1,0 +1,51 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block title %} Plataforma Intersectorial de Comunicaci&oacute;n OGCS {% endblock %}
+  {% block content %}
+    <div id="contenido">
+      <div id="contenido_izq">
+{% if error_message %}<div class="span9"><div class="alert alert-error">
+<a class="close" data-dismiss="alert">×</a>
+<strong>Error!</strong> {{ error_message }}</div></div>{% endif %}
+<form class="form-inline fondo" name="login" method="post" action="{% url shorten-login %}">                
+                {% csrf_token %}
+          <div id="login">
+              <a href="#url"><div class="titulo"> ¿olvidaste tu contraseña?</div></a>
+                <div class="tabla_login"> 
+                  <table width="400">
+                        <tr>
+                          <td colspan="2">{{ form.usuario.label_tag }}{{ form.usuario }}</td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">{{ form.clave.label_tag }}{{ form.clave }}</td>
+                        </tr>
+                        <tr>
+                          <td align="left" width="50%"><a href="javascript: document.login.submit();"><img  src="{{ STATIC_URL  }}images/botonsesion.png"></a></td>
+                            <td align="center" width="50%"><a href="#" onclick="limpiar_fields()"><img src="{{ STATIC_URL  }}images/botoncuenta.png"></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+</form>
+        </div>
+      <div id="contenido_der"></div>
+    </div>
+{% endblock %}
+ {% block scriptjs %}    
+<script>
+$('#id_usuario').keydown(function(event) {
+  if (event.which == 13) {
+    document.login.submit();
+  }
+});
+$('#id_clave').keydown(function(event) {
+  if (event.which == 13) {
+    document.login.submit();
+  }
+});
+function limpiar_fields(){
+  $("#id_usuario").val("");
+  $("#id_clave").val("");
+  }
+</script>
+  {% endblock %}
