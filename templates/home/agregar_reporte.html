@@ -27,9 +27,45 @@ action="{% url shorten-mantenimiento-doc-add %}" {% endif %}>
       {% csrf_token %}            
       {{ formulario.archivo.errors }}
       <div class="row-fluid">         
-      <div class="span3">{{ formulario.archivo.label_tag }}:</div><div class="span7">{{ formulario.archivo }}</div>
-   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo').val('');">
-   </div></div><p></p>
+      <div class="span3">{{ formulario.archivo1.label_tag }}:</div><div class="span7">{{ formulario.archivo1 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo1').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo2.label_tag }}:</div><div class="span7">{{ formulario.archivo2 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo2').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo3.label_tag }}:</div><div class="span7">{{ formulario.archivo3 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo3').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo4.label_tag }}:</div><div class="span7">{{ formulario.archivo4 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo4').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo5.label_tag }}:</div><div class="span7">{{ formulario.archivo5 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo5').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo6.label_tag }}:</div><div class="span7">{{ formulario.archivo6 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo6').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo7.label_tag }}:</div><div class="span7">{{ formulario.archivo7 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo7').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo8.label_tag }}:</div><div class="span7">{{ formulario.archivo8 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo8').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo9.label_tag }}:</div><div class="span7">{{ formulario.archivo9 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo9').val('');">
+   </div></div><br>
+   <div class="row-fluid">         
+      <div class="span3">{{ formulario.archivo10.label_tag }}:</div><div class="span7">{{ formulario.archivo10 }}</div>
+   <div class="span2"><input class="btn" name="limpiar" value="Limpiar" type="button" onClick="$('#id_archivo10').val('');">
+   </div></div><br>
       {{ formulario.descripcion.errors }}
       <div class="row-fluid">        
       <div class="span3">{{ formulario.descripcion.label_tag }}:</div><div class="span9">{{ formulario.descripcion }}</div></div>
@@ -54,7 +90,7 @@ action="{% url shorten-mantenimiento-doc-add %}" {% endif %}>
   {% endblock %}
   {% block scriptjs %}  
 <script>
-$('#frmdoc').submit(function() {{% if not reporte %}
+/*$('#frmdoc').submit(function() {{% if not reporte %}
 if($('#id_archivo').val()==''){  
   alert('Debe adjuntar el archivo a subir');return false;  
 }{% endif %}
@@ -63,7 +99,26 @@ if($("#id_descripcion").val()==''){
   $("#id_descripcion").focus(); return false;
 }
 return confirmar('¿Desea {% if reporte %}Modificar{% else %}Guardar{% endif %} el registro?');
+});*/
+
+$('#frmdoc').submit(function() {
+var ok=true;
+if ($.inArray($("#id_archivo1").val().split('.').pop().toLowerCase(), ['jpg','gif','png','jpeg']) == -1) {
+alert('Solo se acepta archivos en formato Imagen');$("#id_archivo1").focus();ok=false;return false;
+}
+$("form input:file").each(function(index){
+var ext = $(this).val().split('.').pop().toLowerCase();
+if($.inArray(ext, ['jpg','gif','png','jpeg']) == -1 & ext!='') {
+   alert('Archivo '+(index+1)+': Solo se acepta archivos en formato Imagen');$(this).focus();ok=false;return false;
+}});
+if($("#id_descripcion").val()==''){
+  alert('Debe agregar una breve descripción sobre el reporte periodistico');
+  $("#id_descripcion").focus(); ok= false;
+}
+if(ok){return confirmar('¿Desea {% if reporte %}Modificar{% else %}Guardar{% endif %} el registro?');}else{return false;}
 });
+
+
 $(document).ready(function() {
   fecha = new Date();
    $("#id_fecha").attr('readonly', 'readonly');//   Fecha Inicial.

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from home.models import Reporte
+from home.models import Reporte, ArchivosReporte
 import django_tables2 as tables
 import itertools
-
+from datetime import datetime
 class LoginForm(forms.Form):
     usuario = forms.CharField(max_length=45, label='E-mail:',
         widget=forms.TextInput(attrs={
@@ -18,13 +18,17 @@ class LoginForm(forms.Form):
     	}),
     )
 
-class ReporteForm(forms.ModelForm):
+class ReporteForm(forms.ModelForm):    
+    descripcion = forms.CharField(required=False,
+        widget=forms.Textarea(attrs={'style':'width:90%','rows':'6'}))
+    fec_creac = forms.CharField(required=True,
+        initial=datetime.today().strftime("%d/%m/%Y"))
 
-	class Meta:
-		model = Reporte
+    class Meta:
+		model = ArchivosReporte
 		exclude = ('usuario',)
 		widgets = {
-            'descripcion': forms.Textarea(attrs={'style':'width:90%','rows':'6'}),            
+            'descripcion': forms.Textarea(attrs={'style':'width:90%','rows':'6'}),
         }
 
 class ReporteTable(tables.Table):

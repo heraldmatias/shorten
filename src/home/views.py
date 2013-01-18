@@ -12,6 +12,10 @@ from urllib2 import urlopen
 from django.contrib import messages
 from django_tables2.config import RequestConfig
 from django.core.files.storage import  FileSystemStorage,default_storage
+from django.db import transaction
+import os
+from django.conf import settings
+
 def internal_error_view(request):
     return render_to_response('500.html',{},context_instance=RequestContext(request))
 
@@ -65,39 +69,57 @@ def singout(request):
     return redirect(settings.LOGIN_URL)
 
 @login_required()
+@transaction.commit_on_success
 def documentos_add(request, codigo=None):
     obj=None
     short_url = None
     if codigo:
-        obj= get_object_or_404(Reporte,pk=codigo)        
+        obj= get_object_or_404(Reporte,pk=codigo)
     if request.method == 'POST':
-        if 'archivo' in request.FILES:
-            archivo = request.FILES['archivo']
-            extension = archivo.name[archivo.name.rfind('.')+1:].upper()            
-            filename= "%s%s.%s" % ('REPORTE-',datetime.today().strftime("%d%m%Y"),extension)            
+        for archivo in request.FILES:
+            filename1 = request.FILES[archivo].name
+            ext = filename1[filename1.rfind('.')+1:]
+            filename= "AR%s_0%s.%s" % (datetime.today().strftime("%d%m%Y%s"),archivo[-1:],ext.upper())                
+            request.FILES[archivo].name = filename            
+        formulario = ReporteForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data        
+        if formulario.is_valid():            
+            rarchivos=formulario.save()            
+            os.chdir(settings.SYSTEM_PATH+'/media/reportes/')
+            larchivos = ''
+            reporte = 'REPORTE-%s.pdf'%datetime.today().strftime("%d%m%Y")
+            for archivo in request.FILES:
+                larchivos = larchivos + 'archivos/'+request.FILES[archivo].name +' '
+            
+            os.system('convert %s %s' %(larchivos,reporte))
             if not obj:
-                obj = Reporte(usuario=request.user)            
-            request.FILES['archivo'].name = filename
-        filename = obj.archivo
-        formulario = ReporteForm(request.POST,request.FILES,instance=obj ) # A form bound to the POST data
-        if formulario.is_valid():
-            if codigo and 'archivo' in request.FILES:
-                FileSystemStorage().delete(filename)
-            formulario.save()            
+                obj = Reporte(archivo='reportes/'+reporte,
+                    usuario=request.user,
+                    descripcion= request.POST.get('descripcion',None),
+                    fec_creac=datetime.today())
             bitly_url = "http://api.bit.ly/v3/shorten?login={0}&apiKey={1}&longUrl={2}&format=txt"
             req_url = bitly_url.format('o_1r4i8j6ca1',
                 'R_bf0a523274308dc57ae0638c6799ac56',
                 'https://docs.google.com/viewer?url=http://%s%s&embedded=true'%(request.META['HTTP_HOST'],obj.archivo.url))
             obj.short_url = urlopen(req_url).read()
+            obj.descripcion= request.POST.get('descripcion',None)
+            obj.fec_creac=datetime.today()
             obj.save()
+            rarchivos.reporte = obj
+            rarchivos.save()
             messages.add_message(request, messages.SUCCESS, 'Reporte grabado exitosamente!!!')
             #print "AQUI"
             #return redirect('shorten-mantenimiento-doc-query')
-            short_url = obj.short_url
+            short_url = obj.short_url        
         obj = None
         formulario = ReporteForm()
-    else:        
-        formulario = ReporteForm(instance=obj)
+    else:
+        formulario = ReporteForm()
+        if obj:
+            formulario = ReporteForm(instance=obj.archivos.get(),
+                initial={
+                    'descripcion':obj.descripcion,
+                    'fec_creac':obj.fec_creac.strftime("%d/%m/%Y"),
+                })
     return render_to_response('home/agregar_reporte.html', {
         'reporte':obj,
         'short_url' : short_url,
