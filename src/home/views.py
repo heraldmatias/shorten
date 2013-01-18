@@ -8,13 +8,14 @@ from datetime import datetime
 from django.contrib.sites.models import get_current_site
 from django.conf import settings
 from home.models import Reporte
-from urllib2 import urlopen
+#from urllib2 import urlopen
 from django.contrib import messages
 from django_tables2.config import RequestConfig
 from django.core.files.storage import  FileSystemStorage,default_storage
 from django.db import transaction
 import os
 from django.conf import settings
+import bitly
 
 def internal_error_view(request):
     return render_to_response('500.html',{},context_instance=RequestContext(request))
@@ -86,7 +87,7 @@ def documentos_add(request, codigo=None):
             rarchivos=formulario.save()            
             os.chdir(settings.SYSTEM_PATH+'/media/reportes/')
             larchivos = ''
-            reporte = 'REPORTE-%s.pdf'%datetime.today().strftime("%d%m%Y")
+            reporte = 'REPORTE-%s.pdf'%datetime.today().strftime("%d%m%Y%s")
             for archivo in request.FILES:
                 larchivos = larchivos + 'archivos/'+request.FILES[archivo].name +' '
             
@@ -96,19 +97,15 @@ def documentos_add(request, codigo=None):
                     usuario=request.user,
                     descripcion= request.POST.get('descripcion',None),
                     fec_creac=datetime.today())
-            bitly_url = "http://api.bit.ly/v3/shorten?login={0}&apiKey={1}&longUrl={2}&format=txt"
-            req_url = bitly_url.format('o_1r4i8j6ca1',
-                'R_bf0a523274308dc57ae0638c6799ac56',
-                'https://docs.google.com/viewer?url=http://%s%s&embedded=true'%(request.META['HTTP_HOST'],obj.archivo.url))
-            obj.short_url = urlopen(req_url).read()
+            api = bitly.Api(login='o_1r4i8j6ca1',apikey='R_bf0a523274308dc57ae0638c6799ac56')
+            req_url = 'https://docs.google.com/viewer?url=http://%s%s&embedded=true'%(request.META['HTTP_HOST'],obj.archivo.url)            
+            obj.short_url = api.shorten(req_url)
             obj.descripcion= request.POST.get('descripcion',None)
             obj.fec_creac=datetime.today()
             obj.save()
             rarchivos.reporte = obj
             rarchivos.save()
-            messages.add_message(request, messages.SUCCESS, 'Reporte grabado exitosamente!!!')
-            #print "AQUI"
-            #return redirect('shorten-mantenimiento-doc-query')
+            messages.add_message(request, messages.SUCCESS, 'Reporte grabado exitosamente!!!')            
             short_url = obj.short_url        
         obj = None
         formulario = ReporteForm()
