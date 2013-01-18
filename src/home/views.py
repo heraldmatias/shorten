@@ -91,7 +91,7 @@ def documentos_add(request, codigo=None):
             for archivo in request.FILES:
                 larchivos = larchivos + 'archivos/'+request.FILES[archivo].name +' '
             
-            os.system('convert %s %s' %(larchivos,reporte))
+            os.system('convert %s -quality 100 %s' %(larchivos,reporte))
             if not obj:
                 obj = Reporte(archivo='reportes/'+reporte,
                     usuario=request.user,
